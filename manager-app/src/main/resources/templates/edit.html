@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title data-th-text="#{'page.title'}"></title>
+</head>
+<body>
+<div data-th-if="${errors}">
+    <h2>Errors</h2>
+    <ul>
+        <li data-th-each="error: ${errors}" data-th-text="${error}"></li>
+    </ul>
+</div>
+<form method="post" data-th-action="@{/products/edit}">
+    <input type="hidden" name="id" data-th-value="${product?.id}">
+    <label>
+        Title:<br>
+        <input type="text" name="title" data-th-value="${product?.title}">
+    </label><br>
+    <label>
+        description:<br>
+        <textarea name="description" data-th-text="${product?.description}"></textarea>
+    </label><br>
+    <button type="submit">Ok</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title data-th-text="#{'page.title'}"></title>
+</head>
+<body>
+<a href="/products/list" data-th-text="#{'page.products_list'}"></a>
+<h1>Product</h1>
+<a data-th-href="@{/products/{id}/edit(id=${product.id})}">Edit</a>
+<ul>
+    <li><strong>Id</strong>: <span data-th-text="${product.id}"></span></li>
+    <li><strong>Title</strong>: <span data-th-text="${product.title}"></span></li>
+    <li><strong>Description</strong>: <span data-th-text="${product.description}"></span></li>
+</ul>
+<form method="post" data-th-action="@{/products/{id}/delete(id=${product.id})}">
+    <button type="submit">Delete</button>
+</form>
+</body>
+</html>
