@@ -1,7 +1,7 @@
 package com.github.gsold2.manager.controller;
 
+import com.github.gsold2.manager.client.ProductRestClient;
 import com.github.gsold2.manager.model.Product;
-import com.github.gsold2.manager.service.ProductService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,54 +21,52 @@ import java.util.NoSuchElementException;
 @RequestMapping("products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductRestClient productRestClient;
     private final MessageSource messageSource;
 
 
     @GetMapping("list")
-    public String getAllProducts(Model model) {
-        model.addAttribute("products", productService.findAll());
+    public String getAll(Model model) {
+        model.addAttribute("products", productRestClient.getAll());
         return "list";
     }
 
     @GetMapping("{id}")
-    public String getProduct(@PathVariable(value = "id") int id, Model model) {
-        Product product = productService.find(id)
+    public String get(@PathVariable(value = "id") int id, Model model) {
+        Product product = productRestClient.get(id)
                 .orElseThrow(() -> new NoSuchElementException("errors.product.not_found"));
         model.addAttribute("product", product);
         return "product";
     }
 
     @PostMapping("{id}/delete")
-    public String deleteProduct(@PathVariable(value = "id") int id) {
-        if (!productService.delete(id)) {
-            throw new NoSuchElementException("errors.product.not_found");
-        }
+    public String delete(@PathVariable(value = "id") int id) {
+        productRestClient.delete(id);
         return "redirect:/products/list";
     }
 
     @GetMapping("create")
-    public String createProduct() {
+    public String create() {
         return "edit";
     }
 
     @GetMapping("{id}/edit")
-    public String editProduct(@PathVariable(value = "id") int id, Model model) {
-        Product product = productService.find(id)
+    public String update(@PathVariable(value = "id") int id, Model model) {
+        Product product = productRestClient.get(id)
                 .orElseThrow(() -> new NoSuchElementException("errors.product.not_found"));
         model.addAttribute("product", product);
         return "edit";
     }
 
     @PostMapping("edit")
-    public String saveProduct(@Valid Product product, BindingResult bindingResult, Model model) {
+    public String edit(@Valid Product product, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toList());
             return "edit";
         } else {
-            Product newProduct = productService.save(product);
+            Product newProduct = productRestClient.create(product.getTitle(), product.getDescription());
             model.addAttribute("product", newProduct);
             return "redirect:/products/list";
         }

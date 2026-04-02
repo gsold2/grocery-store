@@ -1,15 +1,13 @@
-package com.github.gsold2.manager.model;
+package com.github.gsold2.catalog.model;
 
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class Product {
 
     Integer id;
@@ -20,9 +18,4 @@ public class Product {
 
     @Size(max = 1000, message = "{products.errors.description_size_is_invalid}")
     String description;
-
-    public Product(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
 }
