@@ -67,7 +67,7 @@ public class ProductController {
             return "edit";
         } else {
             if (product.getId() == null) {
-                Product newProduct = productRestClient.create(product.getTitle(), product.getDescription());
+                Product newProduct = productRestClient.create(product);
                 model.addAttribute("product", newProduct);
             } else {
                 productRestClient.update(product);

@@ -15,5 +15,5 @@ public interface ProductRestClient {
 
     void update(Product product);
 
-    Product create(String title, String description);
+    Product create(Product product);
 }

@@ -60,10 +60,10 @@ public class ProductRestClientImpl implements ProductRestClient {
     }
 
     @Override
-    public Product create(String title, String description) {
+    public Product create(Product product) {
         return restClient.post()
                 .uri("/api/products")
-                .body(new Product(title, description))
+                .body(product)
                 .retrieve()
                 .body(Product.class);
     }
