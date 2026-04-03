@@ -13,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @RestController
 @AllArgsConstructor
@@ -29,24 +28,18 @@ public class ProductRestController {
 
     @GetMapping("{id}")
     public Product get(@PathVariable(value = "id") int id) {
-        return productService.find(id)
-                .orElseThrow(() -> new NoSuchElementException("errors.product.not_found"));
+        return productService.find(id);
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> delete(@PathVariable(value = "id") int id) {
-        if (!productService.delete(id)) {
-            throw new NoSuchElementException("errors.product.not_found");
-        }
-        return ResponseEntity.noContent().build();
+    public void delete(@PathVariable(value = "id") int id) {
+        productService.delete(id);
     }
 
     @PatchMapping()
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Product product, BindingResult bindingResult) throws BindException {
-        productService.find(product.getId())
-                .orElseThrow(() -> new NoSuchElementException("errors.product.not_found"));
         if (bindingResult.hasErrors()) {
             if (bindingResult instanceof BindException exception) {
                 throw exception;

@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
@@ -19,13 +19,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<Product> find(int id) {
-        return repository.find(id);
+    public Product find(int id) {
+        return repository.find(id).orElseThrow(() -> new NoSuchElementException("errors.product.not_found"));
     }
 
     @Override
-    public boolean delete(int id) {
-        return repository.delete(id);
+    public void delete(int id) {
+        if (!repository.delete(id)) {
+            throw new NoSuchElementException("errors.product.not_found");
+        }
     }
 
     @Override
@@ -35,6 +37,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void update(Product product) {
-        repository.update(product);
+        repository.find(product.getId())
+                .ifPresentOrElse(p -> {
+                    p.setTitle(product.getTitle());
+                    p.setDescription(product.getDescription());
+                }, () -> {
+                    throw new NoSuchElementException("errors.product.not_found");
+                });
     }
 }

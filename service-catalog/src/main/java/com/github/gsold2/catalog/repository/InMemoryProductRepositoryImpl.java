@@ -45,11 +45,4 @@ public class InMemoryProductRepositoryImpl implements ProductRepository {
 
         return product;
     }
-
-    @Override
-    public void update(Product product) {
-        if (products.put(product.getId(), product) == null) {
-            throw new NoSuchElementException("errors.product.not_found");
-        }
-    }
 }

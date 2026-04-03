@@ -11,9 +11,7 @@ public interface ProductRepository {
 
     Optional<Product> find(int id);
 
-     boolean delete(int id);
+    boolean delete(int id);
 
     Product create(Product product);
-
-    void update(Product product);
 }

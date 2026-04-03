@@ -66,8 +66,14 @@ public class ProductController {
                     .toList());
             return "edit";
         } else {
-            Product newProduct = productRestClient.create(product.getTitle(), product.getDescription());
-            model.addAttribute("product", newProduct);
+            if (product.getId() == null) {
+                Product newProduct = productRestClient.create(product.getTitle(), product.getDescription());
+                model.addAttribute("product", newProduct);
+            } else {
+                productRestClient.update(product);
+                model.addAttribute("product", product);
+            }
+
             return "redirect:/products/list";
         }
     }
