@@ -53,7 +53,7 @@ public class ProductRestClientImpl implements ProductRestClient {
     @Override
     public void update(Product product) {
         restClient.patch()
-                .uri("/api/products")
+                .uri("/api/products/{id}", product.getId())
                 .body(product)
                 .retrieve()
                 .toBodilessEntity();

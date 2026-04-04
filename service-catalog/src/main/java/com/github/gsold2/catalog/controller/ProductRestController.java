@@ -1,6 +1,7 @@
 package com.github.gsold2.catalog.controller;
 
 import com.github.gsold2.catalog.model.Product;
+import com.github.gsold2.catalog.payload.ProductPayload;
 import com.github.gsold2.catalog.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -37,35 +38,34 @@ public class ProductRestController {
         productService.delete(id);
     }
 
-    @PatchMapping()
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Product product, BindingResult bindingResult) throws BindException {
+    public void update(@Valid @RequestBody ProductPayload product, BindingResult bindingResult, @PathVariable int id) throws BindException {
         if (bindingResult.hasErrors()) {
             if (bindingResult instanceof BindException exception) {
                 throw exception;
             } else {
                 throw new BindException(bindingResult);
             }
-        } else {
-            productService.update(product);
         }
+        productService.update(new Product(id, product.getTitle(), product.getDescription()));
     }
 
     @PostMapping()
-    public ResponseEntity<Product> create(@Valid @RequestBody Product product, BindingResult bindingResult, UriComponentsBuilder uriComponentsBuilder) throws BindException {
+    public ResponseEntity<Product> create(@Valid @RequestBody ProductPayload product, BindingResult bindingResult, UriComponentsBuilder uriComponentsBuilder) throws BindException {
         if (bindingResult.hasErrors()) {
             if (bindingResult instanceof BindException exception) {
                 throw exception;
             } else {
                 throw new BindException(bindingResult);
             }
-        } else {
-            Product created = productService.create(new Product(null, product.getTitle(), product.getDescription()));
-            return ResponseEntity
-                    .created(uriComponentsBuilder
-                            .replacePath("/api/products/{id}")
-                            .build(Map.of("id", created.getId())))
-                    .body(created);
         }
+        Product created = productService.create(new Product(null, product.getTitle(), product.getDescription()));
+        return ResponseEntity
+                .created(uriComponentsBuilder
+                        .replacePath("/api/products/{id}")
+                        .build(Map.of("id", created.getId())))
+                .body(created);
+
     }
 }
