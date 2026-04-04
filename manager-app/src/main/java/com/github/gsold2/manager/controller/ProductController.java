@@ -1,16 +1,14 @@
 package com.github.gsold2.manager.controller;
 
 import com.github.gsold2.manager.client.ProductRestClient;
+import com.github.gsold2.manager.client.BadRequestException;
 import com.github.gsold2.manager.model.Product;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
@@ -59,13 +57,8 @@ public class ProductController {
     }
 
     @PostMapping("edit")
-    public String edit(@Valid Product product, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getFieldErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .toList());
-            return "edit";
-        } else {
+    public String edit(Product product, Model model) {
+        try {
             if (product.getId() == null) {
                 Product newProduct = productRestClient.create(product);
                 model.addAttribute("product", newProduct);
@@ -75,6 +68,11 @@ public class ProductController {
             }
 
             return "redirect:/products/list";
+        } catch (BadRequestException exception) {
+            model.addAttribute("product", product);
+            model.addAttribute("errors", exception.getErrors());
+
+            return "edit";
         }
     }
 

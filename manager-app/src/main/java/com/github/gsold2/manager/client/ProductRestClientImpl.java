@@ -3,6 +3,7 @@ package com.github.gsold2.manager.client;
 import com.github.gsold2.manager.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
@@ -52,19 +53,31 @@ public class ProductRestClientImpl implements ProductRestClient {
 
     @Override
     public void update(Product product) {
-        restClient.patch()
-                .uri("/api/products/{id}", product.getId())
-                .body(product)
-                .retrieve()
-                .toBodilessEntity();
+        try {
+            restClient.patch()
+                    .uri("/api/products/{id}", product.getId())
+                    .body(product)
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (HttpClientErrorException.BadRequest exception) {
+            ProblemDetail problemDetail = exception.getResponseBodyAs(ProblemDetail.class);
+            //NOTE ignore @Nullable
+            throw new BadRequestException((List<String>) problemDetail.getProperties().get("errors"));
+        }
     }
 
     @Override
     public Product create(Product product) {
-        return restClient.post()
-                .uri("/api/products")
-                .body(product)
-                .retrieve()
-                .body(Product.class);
+        try {
+            return restClient.post()
+                    .uri("/api/products")
+                    .body(product)
+                    .retrieve()
+                    .body(Product.class);
+        } catch (HttpClientErrorException.BadRequest exception) {
+            ProblemDetail problemDetail = exception.getResponseBodyAs(ProblemDetail.class);
+            //NOTE ignore @Nullable
+            throw new BadRequestException((List<String>) problemDetail.getProperties().get("errors"));
+        }
     }
 }
