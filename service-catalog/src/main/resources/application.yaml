@@ -1,0 +1,15 @@
+spring:
+    application:
+        name: service-catalog
+    datasource:
+        url: jdbc:postgresql://localhost:5432/service
+        username: user
+        password: password
+    jpa:
+        show-sql: true
+
+server:
+    port: 8081
+logging:
+    level:
+        sql: info

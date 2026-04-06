@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> findAll();
+    Iterable<Product> findAll();
 
     Product find(int id);
 
