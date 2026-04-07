@@ -14,8 +14,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
 
-    public Iterable<Product> findAll() {
-        return repository.findAll();
+    public Iterable<Product> getList(String filter) {
+        if (filter != null && !filter.isBlank()) {
+            return repository.findAllByTitleLikeIgnoreCase("%" + filter + "%");
+        } else {
+            return repository.findAll();
+        }
     }
 
     @Override

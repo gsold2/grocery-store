@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ProductRestClient {
 
-    List<Product> getAll();
+    List<Product> getList(String filter);
 
     Optional<Product> get(int id);
 

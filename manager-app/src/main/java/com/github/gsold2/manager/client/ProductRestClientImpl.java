@@ -20,9 +20,9 @@ public class ProductRestClientImpl implements ProductRestClient {
     private final RestClient restClient;
 
     @Override
-    public List<Product> getAll() {
+    public List<Product> getList(String filter) {
         return restClient.get()
-                .uri("/api/products")
+                .uri("/api/products?filter={filter}", filter)
                 .retrieve()
                 .body(PRODUCTS_TYPE_REFERENCE);
     }

@@ -1,7 +1,7 @@
 package com.github.gsold2.manager.controller;
 
-import com.github.gsold2.manager.client.ProductRestClient;
 import com.github.gsold2.manager.client.BadRequestException;
+import com.github.gsold2.manager.client.ProductRestClient;
 import com.github.gsold2.manager.model.Product;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -22,10 +22,9 @@ public class ProductController {
     private final ProductRestClient productRestClient;
     private final MessageSource messageSource;
 
-
     @GetMapping("list")
-    public String getAll(Model model) {
-        model.addAttribute("products", productRestClient.getAll());
+    public String getList(@RequestParam(name = "filter", required = false) String filter, Model model) {
+        model.addAttribute("products", productRestClient.getList(filter));
         return "list";
     }
 
