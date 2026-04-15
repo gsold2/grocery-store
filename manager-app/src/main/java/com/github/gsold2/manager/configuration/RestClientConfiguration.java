@@ -6,25 +6,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.web.client.RestClient;
-
-import java.util.Base64;
 
 @Configuration
 @AllArgsConstructor
 public class RestClientConfiguration {
 
     @Bean
-    public ProductRestClient productRestClientImpl(@Value("${service.catalogue.uri:http://localhost:8081}") String serviceBaseUri,
-                                                   @Value("${service.catalogue.username:user}") String username,
-                                                   @Value("${service.catalogue.password:password}") String password) {
-        String credentials = "%s:%s".formatted(username, password);
-        String encodedCredentials = "Basic %s".formatted(Base64.getEncoder().encodeToString(credentials.getBytes()));
+    public ProductRestClient productRestClientImpl(@Value("${service.catalog.uri:http://localhost:8081}") String serviceBaseUri,
+                                                   @Value("${service.catalog.username:user}") String userName,
+                                                   @Value("${service.catalog.password:password}") String password) {
         return new ProductRestClientImpl(
                 RestClient.builder()
                         .baseUrl(serviceBaseUri)
-                        .defaultHeader(HttpHeaders.AUTHORIZATION, encodedCredentials)
+                        .requestInterceptor(new BasicAuthenticationInterceptor(userName, password))
                         .build()
         );
     }
