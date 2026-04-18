@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractAu
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -24,7 +24,7 @@ public class SecurityConfiguration {
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -47,7 +47,7 @@ public class SecurityConfiguration {
 
             return User.builder()
                     .username(storeUser.getName())
-                    .password(passwordEncoder().encode(storeUser.getPassword()))
+                    .password(storeUser.getPassword())
                     .roles(storeUser.getRolesAsStrings().toArray(new String[0]))
                     .build();
         };

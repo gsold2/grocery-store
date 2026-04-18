@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS manager.users
 (
     id serial primary key,
     name varchar(16) not null unique,
-    password varchar(16) not null
+    password varchar not null
 );
 
 CREATE TABLE IF NOT EXISTS manager.role
@@ -17,12 +17,14 @@ CREATE TABLE IF NOT EXISTS manager.user_role
 (
     id serial primary key,
     user_id int not null references manager.users(id),
-    role_id int not null references manager.role(id)
+    role_id int not null references manager.role(id),
+    constraint uk_user_role unique (user_id, role_id)
 );
 
 INSERT INTO manager.users (name, password)
 VALUES
-    ('user', 'password');
+-- password=password
+    ('user', '$2a$10$N.S1y.6x0ASIqztE5YdWdeBw5yx2avnuevZ4/AKhxAFda209kxyii');
 
 INSERT INTO manager.role (name)
 VALUES
