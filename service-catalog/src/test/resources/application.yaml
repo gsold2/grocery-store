@@ -1,0 +1,9 @@
+spring:
+    application:
+        name: service-catalog
+    datasource:
+        url: jdbc:tc:postgresql:16.1:///service?TC_DAEMON=true
+        username: user
+        password: password
+    jpa:
+        show-sql: true

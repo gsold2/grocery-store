@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 public class ProductController {
 
     private final ProductRestClient productRestClient;
+
     private final MessageSource messageSource;
 
     @GetMapping("list")
