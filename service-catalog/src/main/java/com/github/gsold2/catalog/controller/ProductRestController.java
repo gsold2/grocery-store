@@ -26,12 +26,12 @@ public class ProductRestController {
         return productService.getList(filter);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Product get(@PathVariable(value = "id") int id) {
         return productService.find(id);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable(value = "id") int id) {
         productService.delete(id);

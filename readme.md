@@ -13,3 +13,6 @@ mvn clean flyway:clean flyway:migrate spring-boot:run
 docker exec -it service-catalog psql -U user -d service
 
 docker exec -it manager-app psql -U user -d service
+
+http://localhost:8081/swagger-ui.html
+http://localhost:8081/api-docs
